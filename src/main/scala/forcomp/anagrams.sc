@@ -30,28 +30,23 @@ val expanded = oc1 map (o => (1 to o._2) map (x => (o._1, x)))
 
 def combines(oc: Occurrences): List[Occurrences] = {
   if (oc.isEmpty) List(List())
-  else
+  else {
     for {
       combined <- combines(oc.tail)
-      (c, n) <- oc
-      if !combined.exists(y => y._1 == c)
-      x <- 1 to n
-//      if combined.isEmpty
-      _ = println("new = " + (c, x))
-      _ = println("combined = " + combined)
-    } yield (c, x) :: combined
+      x <- 0 to oc.head._2
+    } yield if (x == 0) Nil else List((oc.head._1, x)) ++ combined
+  }.distinct
 }
 combines(oc2)
+
+def makeOccur(c: Char, n: Int): List[(Char, Int)] = if (n == 0) Nil else List((c, n))
+
 def combines2(oc: Occurrences): List[Occurrences] = {
   if (oc.isEmpty) List(List())
   else
-  combines2(oc.tail) flatMap
-    (combined => oc withFilter(z => !combined.exists(y => y._1 == z._1)) flatMap
-      (o => (1 to o._2) map
-        (x => {
-//          println("new=" + (o._1, x) + " combined=" + combined + " result=" + (o._1, x) :: combined)
-          (o._1, x) :: combined
-        })))
+    combines2(oc.tail) flatMap
+      (combined => 0 to oc.head._2 map
+        (x => makeOccur(oc.head._1, x) ++ combined))
 }
 combines2(oc2)
 //val expandedGrouped = expanded groupBy (_._1)

@@ -89,13 +89,14 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
+    def makeOccur(c: Char, n: Int): List[(Char, Int)] = if (n == 0) Nil else List((c, n))
     if (occurrences.isEmpty) List(List())
-    else
-      for {
-        combined <- combinations(occurrences.tail)
-        (c, n) <- occurrences
-        x <- 1 to n
-      } yield (c, x) :: combined
+    else {
+      val (c, n) = occurrences.head
+      combinations(occurrences.tail) flatMap
+        (combined => 0 to n map
+          (x => makeOccur(c, x) ++ combined))
+    }.distinct
   }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
