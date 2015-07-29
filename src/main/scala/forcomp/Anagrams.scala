@@ -110,16 +110,20 @@ object Anagrams {
    *  and has no zero-entries.
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
-    def smallest(o: Occurrences): Int = (o.head /: o )((x, y) => if (x._2 <= y._2) x else y)._2
-
     def map2Occurrences(in: Map[Char, Int]): List[(Char, Int)] = {
       if (in == Map()) Nil
       else if (in(in.keys.head) <= 0) map2Occurrences(in - in.keys.head)
       else (in.keys.head, in(in.keys.head)) :: map2Occurrences(in - in.keys.head)
     }
 
+    // t is a map of each char in x with each state when subtracting y
+    // example:val x = List(('a', 4), ('b', 3), ('c', 1)); val y = List(('a', 2), ('b', 2))
+    // results: Map[Char,List[(Char, Int)]] = Map(b -> List((b,3), (b,1)), a -> List((a,2), (a,4)), c -> List((c,1), (c,1)))
     val t = x flatMap (o1 => y map (o2 => if (o1._1 == o2._1) (o1._1, o1._2 - o2._2) else o1)) groupBy(_._1)
-    val u = t map(v => (v._1, smallest(v._2)))
+
+    // reduces t to minimum occurrence of each Char
+    // example: Map(b -> 1, a -> 2, c -> 1)
+    val u = t map(v => (v._1, v._2.minBy(_._2)._2))
 
     map2Occurrences(u).sorted
   }

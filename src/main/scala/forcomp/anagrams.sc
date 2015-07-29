@@ -64,8 +64,11 @@ def smallest(o: Occurrences): Int = {
 def smallest2(o: Occurrences): Int = (o.head /: o )((x, y) => if (x._2 <= y._2) x else y)._2
 
 smallest2(oc1)
+oc1.minBy(_._2)._2
 
-val u  = t.groupBy(_._1) map(i => (i._1, smallest2(i._2)))
+val u  = t.groupBy(_._1)
+
+val w = u map(i => (i._1, smallest2(i._2)))
 
 val x = ('a', u('a'))
 
@@ -74,7 +77,7 @@ def map2List(in: Map[Char, Int]): List[(Char, Int)] = {
   else (in.keys.head, in(in.keys.head)) :: map2List(in - in.keys.head)
 }
 
-map2List(u)
+map2List(w)
 
 val l = List(1, 2, 3, 4, 5)
 val zero = 1
