@@ -109,7 +109,21 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    def smallest(o: Occurrences): Int = (o.head /: o )((x, y) => if (x._2 <= y._2) x else y)._2
+
+    def map2Occurrences(in: Map[Char, Int]): List[(Char, Int)] = {
+      if (in == Map()) Nil
+      else if (in(in.keys.head) <= 0) map2Occurrences(in - in.keys.head)
+      else (in.keys.head, in(in.keys.head)) :: map2Occurrences(in - in.keys.head)
+    }
+
+    val t = x flatMap (o1 => y map (o2 => if (o1._1 == o2._1) (o1._1, o1._2 - o2._2) else o1)) groupBy(_._1)
+    val u = t map(v => (v._1, smallest(v._2)))
+//    val u = t map(v => (v._1, (v._2.head /: v._2 )((x, y) => if (x._2 <= y._2) x else y)._2))
+
+    map2Occurrences(u).sorted
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *  

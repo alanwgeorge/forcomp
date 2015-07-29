@@ -17,9 +17,9 @@ pack(s.flatten) map (l => (l.head, l.length))
 
 wordAnagrams("alangeorge")
 
-val oc1 = List(('a', 3), ('b', 3), ('c', 1))
+val oc1 = List(('a', 4), ('b', 3), ('c', 1))
 val oc2 = List(('a', 2), ('b', 2))
-val oc3 = List(('a', 2), ('b', 1), ('c', 2))
+val oc3 = List(('a', 2), ('b', 1), ('c', 1))
 
 for {
   (c, n) <- oc1
@@ -51,3 +51,41 @@ def combines2(oc: Occurrences): List[Occurrences] = {
 combines2(oc2)
 //val expandedGrouped = expanded groupBy (_._1)
 
+val t = oc1 flatMap (o1 => oc2 map (o2 => if (o1._1 == o2._1) (o1._1, o1._2 - o2._2) else o1))
+
+def smallest(o: Occurrences): Int = {
+  o match {
+    case (c, n) :: Nil => n
+    case (c1, n1) :: (c2, n2) :: rest => if (n1 <= n2) smallest((c1, n1) :: rest) else smallest((c2, n2) :: rest)
+    case _ => 0
+  }
+}
+
+def smallest2(o: Occurrences): Int = (o.head /: o )((x, y) => if (x._2 <= y._2) x else y)._2
+
+smallest2(oc1)
+
+val u  = t.groupBy(_._1) map(i => (i._1, smallest2(i._2)))
+
+val x = ('a', u('a'))
+
+def map2List(in: Map[Char, Int]): List[(Char, Int)] = {
+  if (in == Map()) Nil
+  else (in.keys.head, in(in.keys.head)) :: map2List(in - in.keys.head)
+}
+
+map2List(u)
+
+val l = List(1, 2, 3, 4, 5)
+val zero = 1
+def op(x: Int, y: Int) = x * y
+
+l.reduce(op)
+l.reduceLeft(op)
+l.reduceRight(op)
+l.fold(zero)(op)
+l.foldLeft(zero)(op)
+l.foldRight(zero)(op)
+l.sum
+
+//subtract(oc1, oc2)
