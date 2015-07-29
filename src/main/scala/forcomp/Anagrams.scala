@@ -120,7 +120,6 @@ object Anagrams {
 
     val t = x flatMap (o1 => y map (o2 => if (o1._1 == o2._1) (o1._1, o1._2 - o2._2) else o1)) groupBy(_._1)
     val u = t map(v => (v._1, smallest(v._2)))
-//    val u = t map(v => (v._1, (v._2.head /: v._2 )((x, y) => if (x._2 <= y._2) x else y)._2))
 
     map2Occurrences(u).sorted
   }
