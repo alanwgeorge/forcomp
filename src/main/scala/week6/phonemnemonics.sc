@@ -14,6 +14,7 @@ def wordCode(word: String): String = for (c <- word.toUpperCase) yield charCode3
 def wordCode2(word: String): String = word.toUpperCase map charCode3
 
 wordCode("alan")
+wordCode("rack")
 wordCode("alan george")
 wordCode2("alan george")
 wordCode2("java")
@@ -23,6 +24,7 @@ wordCode2("wellsfargo")
 val wordsForNum: Map[String, Seq[String]] = words groupBy wordCode2 withDefaultValue Seq()
 
 wordsForNum("2526")
+wordsForNum("7225")
 wordsForNum("29237638427")
 
 def encode(number: String): Set[List[String]] = {
