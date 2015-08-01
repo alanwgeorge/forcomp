@@ -105,27 +105,28 @@ object Anagrams {
    *  the occurrence list `x` -- any character appearing in `y` must
    *  appear in `x`, and its frequency in `y` must be smaller or equal
    *  than its frequency in `x`.
-   *
+   *l
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
-    def map2Occurrences(in: Map[Char, Int]): List[(Char, Int)] = {
-      if (in == Map()) Nil
-      else if (in(in.keys.head) <= 0) map2Occurrences(in - in.keys.head)
-      else (in.keys.head, in(in.keys.head)) :: map2Occurrences(in - in.keys.head)
+    (x flatMap (xo => y map (yo => if (xo._1 == yo._1) (xo._1, xo._2 - yo._2) else xo))
+      groupBy(_._1) map(g => (g._1, g._2.minBy(_._2)._2))).toList.filter(_._2 > 0).sorted
+  }
+
+  def subtract2(x: Occurrences, y: Occurrences): Occurrences = {
+    def subtractTerm(innerMap: Map[Char, Int], term: (Char, Int)): Map[Char, Int] = {
+      val (c, i) = term
+      if (innerMap(c) - i > 0)
+        innerMap + (c -> (innerMap(c) - i))
+      else innerMap - c
     }
 
-    // t is a map of each char in x with each state when subtracting y
-    // example:val x = List(('a', 4), ('b', 3), ('c', 1)); val y = List(('a', 2), ('b', 2))
-    // results: Map[Char,List[(Char, Int)]] = Map(b -> List((b,3), (b,1)), a -> List((a,2), (a,4)), c -> List((c,1), (c,1)))
-    val t = x flatMap (o1 => y map (o2 => if (o1._1 == o2._1) (o1._1, o1._2 - o2._2) else o1)) groupBy(_._1)
+    def subtr(xm: Map[Char, Int], ym: Map[Char, Int]) = {
+      ym.foldLeft(xm)(subtractTerm)
+    }
 
-    // reduces t to minimum occurrence of each Char
-    // example: Map(b -> 1, a -> 2, c -> 1)
-    val u = t map(v => (v._1, v._2.minBy(_._2)._2))
-
-    map2Occurrences(u).sorted
+    subtr(x.toMap,y.toMap).toList.sorted
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
@@ -162,12 +163,18 @@ object Anagrams {
    *
    *  The different sentences do not have to be output in the order shown above - any order is fine as long as
    *  all the anagrams are there. Every returned word has to exist in the dictionary.
-   *  
+   *
    *  Note: in case that the words of the sentence are in the dictionary, then the sentence is the anagram of itself,
    *  so it has to be returned in this list.
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
-
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    if (sentence.isEmpty) List()
+    else {
+      for {
+        word <- sentence
+      } yield wordAnagrams(word)
+    }
+  }
 }

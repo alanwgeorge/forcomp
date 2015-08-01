@@ -58,3 +58,5 @@ val o = 1d
 val p = 5d
 scalarProduct((o to p by 1).toVector, (p to o by -1).toVector)
 scalarProduct2((o to p by 1).toVector, (p to o by -1).toVector)
+
+(1 to 10) map (n => n.toDouble)
