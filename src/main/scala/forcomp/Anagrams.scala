@@ -114,21 +114,6 @@ object Anagrams {
       groupBy(_._1) map(g => (g._1, g._2.minBy(_._2)._2))).toList.filter(_._2 > 0).sorted
   }
 
-  def subtract2(x: Occurrences, y: Occurrences): Occurrences = {
-    def subtractTerm(innerMap: Map[Char, Int], term: (Char, Int)): Map[Char, Int] = {
-      val (c, i) = term
-      if (innerMap(c) - i > 0)
-        innerMap + (c -> (innerMap(c) - i))
-      else innerMap - c
-    }
-
-    def subtr(xm: Map[Char, Int], ym: Map[Char, Int]) = {
-      ym.foldLeft(xm)(subtractTerm)
-    }
-
-    subtr(x.toMap,y.toMap).toList.sorted
-  }
-
   /** Returns a list of all anagram sentences of the given sentence.
    *  
    *  An anagram of a sentence is formed by taking the occurrences of all the characters of
@@ -170,11 +155,49 @@ object Anagrams {
    *  Note: There is only one anagram of an empty sentence.
    */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-    if (sentence.isEmpty) List()
+    val maxSentenceLength = sentence.flatten.length
+    val inputOccurances = sentenceOccurrences(sentence)
+
+    def occuranceValidation(source: Occurrences, target: Occurrences): Boolean = {
+      val check = for {
+        t <- target
+        s <- source
+        if t._1 == s._1
+      } yield t._2 <= s._2
+
+      !check.contains(false)
+    }
+
+    def addWord(master: Set[List[Word]], element: Word): Set[List[Word]] = {
+      //  println(s"master=$master element=$element")
+      val added = master.map(m => if (occuranceValidation(sentenceOccurrences(sentence), sentenceOccurrences(element :: m))) element :: m else m)
+
+      val combos = for {
+        s <- added
+        c <- s.permutations
+      } yield c
+
+       master ++ added ++ combos
+    }
+
+    if (sentence.isEmpty) List(List())
     else {
-      for {
-        word <- sentence
-      } yield wordAnagrams(word)
+      val words = (for {
+        c <- combinations(sentenceOccurrences(sentence))
+      } yield dictionaryByOccurrences(c)).distinct.flatten
+
+      val wordsProduct = words.foldLeft(Set(List[Word]()))(addWord)
+
+      wordsProduct.toList.filter(s => s != List() && subtract(inputOccurances, sentenceOccurrences(s)) == List())
     }
   }
+}
+
+object Main extends App {
+  import forcomp.Anagrams._
+  println("starting anagram calculation...")
+  val anagrams = sentenceAnagrams(List("Linux", "rulez"))
+//  val anagrams = sentenceAnagrams(List("I", "love", "you"))
+//  val anagrams = sentenceAnagrams(List("Yes", "man"))
+  println(s"anagrams=$anagrams")
 }

@@ -1,5 +1,5 @@
 import forcomp.Anagrams._
-import scala.collection.immutable
+
 val a = "alan"
 def pack[T](packList: List[T]): List[List[T]] = {
   packList match {
@@ -41,13 +41,12 @@ def combines2(oc: Occurrences): List[Occurrences] = {
 }
 combines2(oc2)
 //val expandedGrouped = expanded groupBy (_._1)
-
 (for {
   m <- (for ((c1, n1) <- oc1; (c2, n2) <- oc2) yield if (c1 == c2) (c1, n1 - n2) else (c1, n1)).distinct.groupBy(_._1)
 } yield (m._1, m._2.minBy(_._2)._2)).toList.filter(_._2 > 0).sorted
 
 
-subtract2(oc1, oc2)
+subtract(oc1, oc1)
 
 def subtract2(x: Occurrences, y: Occurrences): Occurrences = {
   def subtractTerm(innerMap: Map[Char, Int], term: (Char, Int)): Map[Char, Int] = {
