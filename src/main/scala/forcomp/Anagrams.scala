@@ -34,13 +34,14 @@ object Anagrams {
    *  same character, and are represented as a lowercase character in the occurrence list.
    */
   def wordOccurrences(w: Word): Occurrences = {
-    def pack[T](packList: List[T]): List[List[T]] = {
-      packList match {
-        case Nil => Nil
-        case x :: xs => val (first, rest) = packList span (_ == x); first :: pack(rest)
-      }
-    }
-    pack(w.toLowerCase.sorted.toList) map (l => (l.head, l.length))
+//    def pack[T](packList: List[T]): List[List[T]] = {
+//      packList match {
+//        case Nil => Nil
+//        case x :: xs => val (first, rest) = packList span (_ == x); first :: pack(rest)
+//      }
+//    }
+//    pack(w.toLowerCase.sorted.toList) map (l => (l.head, l.length))
+     w.toLowerCase.groupBy(g => g).map(f => (f._1, f._2.length)).toList.sorted
   }
 
   /** Converts a sentence into its character occurrence list. */

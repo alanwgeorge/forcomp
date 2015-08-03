@@ -53,8 +53,6 @@ class AnagramsSuite extends FunSuite {
     assert(subtract(oc1, oc2) === result)
   }
 
-
-
   test("combinations: []") {
     assert(combinations(Nil) === List(Nil))
   }
@@ -62,20 +60,22 @@ class AnagramsSuite extends FunSuite {
   test("combinations: abba") {
     val abba = List(('a', 2), ('b', 2))
     val abbacomb = List(
-      List(),
-      List(('a', 1)),
-      List(('a', 2)),
-      List(('b', 1)),
-      List(('a', 1), ('b', 1)),
-      List(('a', 2), ('b', 1)),
-      List(('b', 2)),
-      List(('a', 1), ('b', 2)),
-      List(('a', 2), ('b', 2))
+        List(),
+        List(('a', 1)),
+        List(('a', 2)),
+        List(('b', 1)),
+        List(('a', 1), ('b', 1)),
+        List(('a', 2), ('b', 1)),
+        List(('b', 2)),
+        List(('a', 1), ('b', 2)),
+        List(('a', 2), ('b', 2))
     )
     assert(combinations(abba).toSet === abbacomb.toSet)
   }
 
-
+  test("sentence anagrams: Heather") {
+    assert(sentenceAnagrams(List("Heather")).toSet === Set(List("re", "the", "ha"), List("he", "hat", "re"), List("three", "ha"), List("hare", "the"), List("her", "Thea"), List("at", "he", "her"), List("her", "et", "ha"), List("re", "ah", "the"), List("hear", "the"), List("he", "he", "art") , List("et", "her", "ha"), List("he", "re", "hat"), List("hat", "re", "he"), List("heather"), List("he", "heart"), List("re", "ha", "the"), List("here", "hat"), List("he", "at", "her"), List("he", "hater"), List("ah", "three"), List("her", "heat"), List("he", "earth"), List("there", "ha"), List("ha", "re", "the"), List("re", "heath"), List("et", "ha", "her"), List("ah", "et", "her"), List("ah", "her", "et"), List("re", "the", "ah"), List("he", "he", "rat"), List("rat", "he", "he"), List("ha", "ether"), List("ha", "her", "et"), List("he", "tar", "he"), List("he", "rat", "he"), List("at", "her", "he"), List("ha", "there"), List("ether", "ha"), List("art", "he", "he"), List("ah", "re", "the"), List("tar", "he", "he"), List("hate", "her"), List("the", "hear"), List("he", "art", "he"), List("earth", "he"), List("Rhea", "the"), List("three", "ah"), List("et", "ah", "her"), List("her", "et", "ah"), List("the", "hare"), List("the", "re", "ah"), List("re", "hat", "he"), List("her", "at", "he"), List("hat", "he", "re"), List("he", "he", "tar"), List("ha", "the", "re"), List("the", "Hera"), List("ah", "the", "re"), List("et", "her", "ah"), List("ha", "three"), List("heat", "her"), List("hater", "he"), List("the", "ha", "re"), List("he", "her", "at"), List("heart", "he"), List("there", "ah"), List("ah", "there"), List("ah", "ether"), List("Hera", "the"), List("her", "he", "at"), List("hat", "here"), List("ha", "et", "her"), List("the", "ah", "re"), List("her", "ah", "et"), List("ether", "ah"), List("the", "Rhea"), List("her", "hate"), List("re", "he", "hat"), List("heath", "re"), List("Thea", "her"), List("her", "ha", "et"), List("the", "re", "ha")))
+  }
 
   test("sentence anagrams: []") {
     val sentence = List()
