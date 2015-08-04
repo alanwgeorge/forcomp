@@ -1,7 +1,5 @@
 package forcomp
 
-import common._
-
 object Anagrams {
 
   /** A word is simply a `String`. */
@@ -34,13 +32,6 @@ object Anagrams {
    *  same character, and are represented as a lowercase character in the occurrence list.
    */
   def wordOccurrences(w: Word): Occurrences = {
-//    def pack[T](packList: List[T]): List[List[T]] = {
-//      packList match {
-//        case Nil => Nil
-//        case x :: xs => val (first, rest) = packList span (_ == x); first :: pack(rest)
-//      }
-//    }
-//    pack(w.toLowerCase.sorted.toList) map (l => (l.head, l.length))
      w.toLowerCase.groupBy(g => g).map(f => (f._1, f._2.length)).toList.sorted
   }
 
@@ -111,8 +102,13 @@ object Anagrams {
    *  and has no zero-entries.
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
-    (x flatMap (xo => y map (yo => if (xo._1 == yo._1) (xo._1, xo._2 - yo._2) else xo))
-      groupBy(_._1) map(g => (g._1, g._2.minBy(_._2)._2))).toList.filter(_._2 > 0).sorted
+    y.toMap.foldLeft(x.toMap)((xm, yelem) => {
+      val (c, n) = yelem
+      if (xm(c) - n > 0)
+        xm +  (c -> (xm(c) - n))
+      else
+        xm - c
+    }).toList.sorted
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
@@ -156,10 +152,9 @@ object Anagrams {
    *  Note: There is only one anagram of an empty sentence.
    */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-    val maxSentenceLength = sentence.flatten.length
-    val inputOccurances = sentenceOccurrences(sentence)
+    val inputOccurrences = sentenceOccurrences(sentence)
 
-    def occuranceValidation(source: Occurrences, target: Occurrences): Boolean = {
+    def occurrenceValidation(source: Occurrences, target: Occurrences): Boolean = {
       val check = for {
         t <- target
         s <- source
@@ -171,7 +166,7 @@ object Anagrams {
 
     def addWord(master: Set[List[Word]], element: Word): Set[List[Word]] = {
       //  println(s"master=$master element=$element")
-      val added = master.map(m => if (occuranceValidation(sentenceOccurrences(sentence), sentenceOccurrences(element :: m))) element :: m else m)
+      val added = master.map(m => if (occurrenceValidation(sentenceOccurrences(sentence), sentenceOccurrences(element :: m))) element :: m else m)
 
       val combos = for {
         s <- added
@@ -189,7 +184,19 @@ object Anagrams {
 
       val wordsProduct = words.foldLeft(Set(List[Word]()))(addWord)
 
-      wordsProduct.toList.filter(s => s != List() && subtract(inputOccurances, sentenceOccurrences(s)) == List())
+      wordsProduct.toList.filter(s => s != List() && subtract(inputOccurrences, sentenceOccurrences(s)) == List())
+    }
+  }
+
+  def sentenceAnagrams2(sentence: Sentence): List[Sentence] = {
+    val inputOccurrences = sentenceOccurrences(sentence)
+
+    if (sentence.isEmpty) List(List())
+    else {
+      val words = (for {
+        c <- combinations(sentenceOccurrences(sentence))
+      } yield dictionaryByOccurrences(c)).distinct.flatten
+      List()
     }
   }
 }
