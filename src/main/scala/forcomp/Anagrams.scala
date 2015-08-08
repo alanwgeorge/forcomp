@@ -173,9 +173,10 @@ object Anagrams {
 object Main extends App {
   import forcomp.Anagrams._
   println("starting anagram calculation...")
-//  val anagrams = sentenceAnagrams2(List("Linux", "rulez"))
+//  val anagrams = sentenceAnagrams(List("Linux", "rulez"))
 //  val anagrams = sentenceAnagrams(List("I", "love", "you"))
-//  val anagrams = sentenceAnagrams3(List("Yes", "man"))
-  val anagrams = sentenceAnagrams(List("Heather"))
+//  val anagrams = sentenceAnagrams(List("Yes", "man"))
+//  val anagrams = sentenceAnagrams(List("Heather"))
+  val anagrams = sentenceAnagrams(List("alan", "wesley", "george"))
   println(s"anagrams=$anagrams")
 }
