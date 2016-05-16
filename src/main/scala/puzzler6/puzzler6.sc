@@ -14,4 +14,5 @@ nextNumber(5.0)
 applyNMulti(3)(2, nextInt)
 applyNCurried(3)(2)(nextInt)
 applyNMulti(3)(2.0, nextNumber[Double])
-applyNCurried(3)(2.0)(nextNumber)
+//applyNCurried(3)(2.0)(nextNumber)
+
