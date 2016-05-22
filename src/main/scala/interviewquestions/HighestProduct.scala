@@ -13,6 +13,7 @@ object HighestProduct extends App {
     perms.sortWith(_ > _).head
   }
 
+  // not working
   def highestProduct2(in: List[Int]): Int = {
     def accum(remander: List[Int], currentWinners: List[Int], max: Int): Int = {
       remander match {
