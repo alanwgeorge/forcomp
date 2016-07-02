@@ -1,6 +1,40 @@
 package interviewquestions;
 
+import java.util.Stack;
+
 public class BinaryTree {
+    private Stack<BinaryTreeNode> stack = new Stack<>();
+
+    public BinaryTree() {
+
+    }
+
+    public BinaryTree(BinaryTreeNode root) {
+        BinaryTreeNode node = root.left;
+
+        while (node != null) {
+            stack.push(node);
+            node = node.left;
+        }
+    }
+
+    public boolean hasNext() {
+        return !stack.empty();
+    }
+
+    public BinaryTreeNode next() {
+        BinaryTreeNode node = stack.pop();
+
+        if (node.right != null) {
+            BinaryTreeNode addNode = node.right;
+            while (addNode != null) {
+                stack.add(addNode);
+                addNode = addNode.left;
+            }
+        }
+
+        return node;
+    }
 
     public static class BinaryTreeNode {
 
@@ -24,27 +58,45 @@ public class BinaryTree {
     }
 
     public static void main(String[] args) {
-        BinaryTree tree = new BinaryTree();
-        BinaryTreeNode node1 = new BinaryTreeNode(1);
+//        BinaryTree tree = new BinaryTree();
+        BinaryTreeNode root = new BinaryTreeNode(1);
 
-        node1.insertLeft(2);
-        node1.insertRight(3);
+        root.insertLeft(2);
+        root.insertRight(3);
 
-        node1.left.insertLeft(4);
-        node1.left.left.insertRight(5);
+        root.left.insertLeft(4);
+//        root.left.left.insertRight(5);
+//
+//        System.out.println("isSuperBalanced: " + tree.isSuperBalanced(root));
 
-        System.out.println("isSuperBalanced: " + tree.isSuperBalanced(node1));
+        BinaryTree tree2 = new BinaryTree(root);
+        System.out.println("isSuperBalanced2: " + tree2.isSuperBalanced2());
+
     }
 
-    public boolean isSuperBalanced(BinaryTreeNode binaryTreeNode) {
-        if (binaryTreeNode.left == null && binaryTreeNode.right != null && (binaryTreeNode.right.right != null || binaryTreeNode.right.left != null)) {
+    public boolean isSuperBalanced(BinaryTreeNode tree) {
+        if (tree.left == null && tree.right != null && (tree.right.right != null || tree.right.left != null)) {
             return false;
         }
-        if (binaryTreeNode.right == null && binaryTreeNode.left != null && (binaryTreeNode.left.right != null || binaryTreeNode.left.left != null)) {
+        if (tree.right == null && tree.left != null && (tree.left.right != null || tree.left.left != null)) {
             return false;
         }
-        if (binaryTreeNode.left != null) return isSuperBalanced(binaryTreeNode.left);
-        if (binaryTreeNode.right != null) return isSuperBalanced(binaryTreeNode.right);
+        if (tree.left != null) return isSuperBalanced(tree.left);
+        if (tree.right != null) return isSuperBalanced(tree.right);
+
+        return true;
+    }
+
+    public boolean isSuperBalanced2() {
+        while (hasNext()) {
+            BinaryTreeNode node = next();
+            if (node.left == null && node.right != null && (node.right.right != null || node.right.left != null)) {
+                return false;
+            }
+            if (node.right == null && node.left != null && (node.left.right != null || node.left.left != null)) {
+                return false;
+            }
+        }
 
         return true;
     }
