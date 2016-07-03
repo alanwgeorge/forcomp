@@ -58,36 +58,25 @@ public class BinaryTree {
     }
 
     public static void main(String[] args) {
-//        BinaryTree tree = new BinaryTree();
         BinaryTreeNode root = new BinaryTreeNode(1);
 
         root.insertLeft(2);
         root.insertRight(3);
 
         root.left.insertLeft(4);
-//        root.left.left.insertRight(5);
-//
-//        System.out.println("isSuperBalanced: " + tree.isSuperBalanced(root));
 
-        BinaryTree tree2 = new BinaryTree(root);
-        System.out.println("isSuperBalanced2: " + tree2.isSuperBalanced2());
+        BinaryTree tree = new BinaryTree(root);
 
+        if (!tree.isSuperBalanced()) throw new RuntimeException("should be super");
+
+        root.left.left.insertRight(5);
+
+        tree = new BinaryTree(root);
+
+        if (tree.isSuperBalanced()) throw new RuntimeException("should not be super");
     }
 
-    public boolean isSuperBalanced(BinaryTreeNode tree) {
-        if (tree.left == null && tree.right != null && (tree.right.right != null || tree.right.left != null)) {
-            return false;
-        }
-        if (tree.right == null && tree.left != null && (tree.left.right != null || tree.left.left != null)) {
-            return false;
-        }
-        if (tree.left != null) return isSuperBalanced(tree.left);
-        if (tree.right != null) return isSuperBalanced(tree.right);
-
-        return true;
-    }
-
-    public boolean isSuperBalanced2() {
+    public boolean isSuperBalanced() {
         while (hasNext()) {
             BinaryTreeNode node = next();
             if (node.left == null && node.right != null && (node.right.right != null || node.right.left != null)) {
