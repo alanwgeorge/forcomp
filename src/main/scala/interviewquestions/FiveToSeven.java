@@ -11,21 +11,19 @@ public class FiveToSeven {
     }
 
     public static int rand7() {
-        int rand = rand7();
-
-        while (rand >= 6) {
-            rand = rand7();
+        while (true) {
+            int rand = (rand5() -1) * 5 + (rand5() - 1) + 1;
+            if (rand > 21) continue;
+            return (rand % 7) + 1 ;
         }
-
-        return rand;
     }
 
     public static void main(String[] args) {
-        int[] valueCounts = new int[5];
+        int[] valueCounts = new int[7];
         int numOfRandoms = 30000;
 
         for (int i = 0; i < numOfRandoms; i++) {
-            int value = FiveToSeven.rand5();
+            int value = FiveToSeven.rand7();
 
             valueCounts[value - 1]++;
         }
