@@ -13,6 +13,7 @@ public class BinarySearchTree {
     public BinarySearchTree() {
     }
 
+    @SuppressWarnings("WeakerAccess")
     public BinarySearchTree(Node root) {
         this.root = root;
     }
