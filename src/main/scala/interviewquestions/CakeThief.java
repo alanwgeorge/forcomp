@@ -5,23 +5,26 @@ import java.util.Arrays;
 public class CakeThief {
 
     private int maxDuffelBagValue(CakeType[] cakeTypes, int capacity) {
-        Arrays.sort(cakeTypes);
         System.out.println(Arrays.toString(cakeTypes));
 
-        int remainingCapacity = capacity;
-        int totalValue = 0;
+        int[] maxWeight = new int[capacity + 1];
 
-            for (int i = cakeTypes.length - 1; i >= 0; i--) {
-                System.out.println("cakeType: "+ cakeTypes[i]);
-                while (cakeTypes[i].weight <= remainingCapacity) {
-                    totalValue = totalValue + cakeTypes[i].value;
-                    remainingCapacity = remainingCapacity - cakeTypes[i].weight;
+        maxWeight[0] = 0;
+
+        for (int i = 1; i <= capacity; i++) {
+            maxWeight[i] = 0;
+            for (CakeType cakeType : cakeTypes) {
+                if (cakeType.weight == i) {
+                    maxWeight[i] = Math.max(maxWeight[i], cakeType.value);
+                } else if (cakeType.weight < i) {
+                    maxWeight[i] = Math.max(maxWeight[i], maxWeight[cakeType.weight] + maxWeight[i - cakeType.weight]);
                 }
-                System.out.println("totalValue: " + totalValue);
-                System.out.println("remainingCapacity: " + remainingCapacity);
             }
+        }
 
-        return totalValue;
+        System.out.println(Arrays.toString(maxWeight));
+
+        return maxWeight[capacity];
     }
 
     public static void main(String[] args) {
@@ -66,11 +69,19 @@ public class CakeThief {
 
         @Override
         public int compareTo(CakeType other) {
-            if (other.efficency() == efficency()) return 0;
-            if (other.efficency() > efficency()) {
-                return -1;
+            if (other.weight == weight) {
+                if (other.value == value) return 0;
+                if (other.value > value) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             } else {
-                return 1;
+                if (other.weight > weight) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
         }
 
